@@ -1,6 +1,6 @@
 ﻿namespace FinancieraAPI.Models;
 
-public partial class Solicitude
+public partial class Solicitud
 {
     public int SolicitudId { get; set; }
 

@@ -27,5 +27,5 @@ public partial class Prestamo
 
     public virtual ICollection<Pago> Pagos { get; set; } = new List<Pago>();
 
-    public virtual Solicitude Solicitud { get; set; } = null!;
+    public virtual Solicitud Solicitud { get; set; } = null!;
 }

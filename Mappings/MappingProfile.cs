@@ -11,10 +11,12 @@ namespace FinancieraAPI.Mappings
             // Models -> DTO
             CreateMap<Usuario, UserResponse>();
             CreateMap<Cliente, ClienteResponse>();
+            CreateMap<Solicitud, SolicitudResponse>();
 
             // DTO -> Models
             CreateMap<UserRequest, Usuario>();
             CreateMap<ClienteRequest, Cliente>();
+            CreateMap<SolicitudRequest, Solicitud>();
         }
     }
 }

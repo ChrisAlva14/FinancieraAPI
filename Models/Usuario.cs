@@ -15,5 +15,5 @@ public partial class Usuario
 
     public virtual ICollection<Cliente> Clientes { get; set; } = new List<Cliente>();
 
-    public virtual ICollection<Solicitude> Solicitudes { get; set; } = new List<Solicitude>();
+    public virtual ICollection<Solicitud> Solicitudes { get; set; } = new List<Solicitud>();
 }

@@ -23,7 +23,7 @@ public partial class FinancieraDbContext : DbContext
 
     public virtual DbSet<Prestamo> Prestamos { get; set; }
 
-    public virtual DbSet<Solicitude> Solicitudes { get; set; }
+    public virtual DbSet<Solicitud> Solicitudes { get; set; }
 
     public virtual DbSet<Usuario> Usuarios { get; set; }
 
@@ -119,7 +119,7 @@ public partial class FinancieraDbContext : DbContext
                 .HasConstraintName("FK__Prestamos__Solic__5070F446");
         });
 
-        modelBuilder.Entity<Solicitude>(entity =>
+        modelBuilder.Entity<Solicitud>(entity =>
         {
             entity.HasKey(e => e.SolicitudId).HasName("PK__Solicitu__85E95DC72E4B6F25");
 
