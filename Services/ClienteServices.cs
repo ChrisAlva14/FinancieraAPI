@@ -76,6 +76,7 @@ namespace FinancieraAPI.Services
             entity.TelefonoCelular = cliente.TelefonoCelular;
             entity.TelefonoFijo = cliente.TelefonoFijo;
             entity.UserId = cliente.UserID;
+            entity.Estado = cliente.Estado;
 
             _context.Clientes.Update(entity);
 

@@ -80,6 +80,7 @@ builder
 //AGREGANDO LOS SERVICIOS
 builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddScoped<IClienteServices, ClienteServices>();
+builder.Services.AddScoped<ISolicitudServices, SolicitudServices>();
 
 var app = builder.Build();
 

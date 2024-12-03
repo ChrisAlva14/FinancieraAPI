@@ -6,6 +6,7 @@
         {
             UserEndpoints.Add(app);
             ClienteEndpoints.Add(app);
+            SolicitudEndpoints.Add(app);
         }
     }
 }
