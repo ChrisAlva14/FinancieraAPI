@@ -91,10 +91,10 @@ namespace FinancieraAPI.Endpoints
                         return Results.Ok();
                 }
             ).WithOpenApi(o => new OpenApiOperation(o)
-                {
-                    Summary = "ELIMINAR SOLICITUD",
-                    Description = "ELIMINAR UNA SOLICITUD DADO SU ID",
-                }).RequireAuthorization();.RequireAuthorization();
+            {
+                Summary = "ELIMINAR SOLICITUD",
+                Description = "ELIMINAR UNA SOLICITUD DADO SU ID",
+            }).RequireAuthorization();
 }
     }
 }
