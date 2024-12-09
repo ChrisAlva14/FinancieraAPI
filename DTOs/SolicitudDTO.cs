@@ -18,7 +18,6 @@
 
         public int UserID { get; set; }
 
-        
     }
 
     public class SolicitudRequest
