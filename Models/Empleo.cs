@@ -9,11 +9,11 @@ public partial class Empleo
 
     public int ClienteId { get; set; }
 
-    public string LugarTrabajo { get; set; } = null!;
+    public string? LugarTrabajo { get; set; }
 
-    public string Cargo { get; set; } = null!;
+    public string? Cargo { get; set; }
 
-    public decimal SueldoBase { get; set; }
+    public string? SueldoBase { get; set; }
 
     public DateOnly FechaIngreso { get; set; }
 
