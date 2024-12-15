@@ -76,7 +76,9 @@ public partial class FinancieraDbContext : DbContext
             entity.Property(e => e.LugarTrabajo)
                 .HasMaxLength(250)
                 .IsUnicode(false);
-            entity.Property(e => e.SueldoBase).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.SueldoBase)
+                .HasMaxLength(100)
+                .IsUnicode(false);
             entity.Property(e => e.TelefonoTrabajo)
                 .HasMaxLength(10)
                 .IsUnicode(false);

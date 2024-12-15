@@ -81,6 +81,7 @@ builder
 builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddScoped<IClienteServices, ClienteServices>();
 builder.Services.AddScoped<ISolicitudServices, SolicitudServices>();
+builder.Services.AddScoped<IEmpleoServices, EmpleoServices>();
 
 var app = builder.Build();
 
