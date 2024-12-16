@@ -11,9 +11,9 @@ public partial class Prestamo
 
     public int ClienteId { get; set; }
 
-    public decimal MontoAprobado { get; set; }
+    public string? MontoAprobado { get; set; }
 
-    public decimal TasaInteres { get; set; }
+    public string? TasaInteres { get; set; }
 
     public int Plazo { get; set; }
 
