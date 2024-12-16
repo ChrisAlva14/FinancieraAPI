@@ -8,6 +8,8 @@
             ClienteEndpoints.Add(app);
             SolicitudEndpoints.Add(app);
             EmpleoEndpoints.Add(app);
+            PrestamoEndpoints.Add(app);
+            PagoEndpoints.Add(app);
         }
     }
 }
