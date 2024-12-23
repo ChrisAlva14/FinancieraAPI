@@ -70,7 +70,6 @@ namespace FinancieraAPI.Services
 
             // Actualiza los atributos especificados
             entity.SolicitudId = prestamo.SolicitudId;
-            entity.ClienteId = prestamo.ClienteId;
             entity.MontoAprobado = prestamo.MontoAprobado;
             entity.TasaInteres = prestamo.TasaInteres;
             entity.FechaInicio = prestamo.FechaInicio;
