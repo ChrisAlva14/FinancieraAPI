@@ -25,8 +25,6 @@ public partial class Cliente
 
     public virtual ICollection<Empleo> Empleos { get; set; } = new List<Empleo>();
 
-    public virtual ICollection<Prestamo> Prestamos { get; set; } = new List<Prestamo>();
-
     public virtual ICollection<Solicitud> Solicitudes { get; set; } = new List<Solicitud>();
 
     public virtual Usuario? User { get; set; }

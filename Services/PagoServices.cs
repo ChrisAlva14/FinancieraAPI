@@ -73,6 +73,7 @@ namespace FinancieraAPI.Services
             entity.FechaPago = pago.FechaPago;
             entity.MontoPagado = pago.MontoPagado;
             entity.SaldoAcumulado = pago.SaldoAcumulado;
+            entity.Estado = pago.Estado;
 
             _context.Pagos.Update(entity);
 

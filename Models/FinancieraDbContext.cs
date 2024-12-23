@@ -99,6 +99,9 @@ public partial class FinancieraDbContext : DbContext
             entity.Property(e => e.SaldoAcumulado)
                 .HasMaxLength(250)
                 .IsUnicode(false);
+            entity.Property(e => e.Estado)
+                .HasMaxLength(50)
+                .IsUnicode(false);
 
             entity.HasOne(d => d.Prestamo).WithMany(p => p.Pagos)
                 .HasForeignKey(d => d.PrestamoId)
@@ -117,11 +120,6 @@ public partial class FinancieraDbContext : DbContext
             entity.Property(e => e.TasaInteres)
                 .HasMaxLength(250)
                 .IsUnicode(false);
-
-            entity.HasOne(d => d.Cliente).WithMany(p => p.Prestamos)
-                .HasForeignKey(d => d.ClienteId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Prestamos__Clien__5165187F");
 
             entity.HasOne(d => d.Solicitud).WithMany(p => p.Prestamos)
                 .HasForeignKey(d => d.SolicitudId)

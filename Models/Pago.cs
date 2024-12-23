@@ -15,5 +15,7 @@ public partial class Pago
 
     public string? SaldoAcumulado { get; set; }
 
+    public string? Estado { get; set; }
+
     public virtual Prestamo Prestamo { get; set; } = null!;
 }
