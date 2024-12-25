@@ -11,9 +11,11 @@ public partial class Pago
 
     public DateOnly FechaPago { get; set; }
 
-    public decimal MontoPagado { get; set; }
+    public string? MontoPagado { get; set; }
 
-    public decimal SaldoAcumulado { get; set; }
+    public string? SaldoAcumulado { get; set; }
+
+    public string? Estado { get; set; }
 
     public virtual Prestamo Prestamo { get; set; } = null!;
 }

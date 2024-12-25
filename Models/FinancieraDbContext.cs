@@ -23,7 +23,7 @@ public partial class FinancieraDbContext : DbContext
 
     public virtual DbSet<Prestamo> Prestamos { get; set; }
 
-    public virtual DbSet<Solicitude> Solicitudes { get; set; }
+    public virtual DbSet<Solicitud> Solicitudes { get; set; }
 
     public virtual DbSet<Usuario> Usuarios { get; set; }
 
@@ -76,7 +76,9 @@ public partial class FinancieraDbContext : DbContext
             entity.Property(e => e.LugarTrabajo)
                 .HasMaxLength(250)
                 .IsUnicode(false);
-            entity.Property(e => e.SueldoBase).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.SueldoBase)
+                .HasMaxLength(100)
+                .IsUnicode(false);
             entity.Property(e => e.TelefonoTrabajo)
                 .HasMaxLength(10)
                 .IsUnicode(false);
@@ -91,8 +93,15 @@ public partial class FinancieraDbContext : DbContext
         {
             entity.HasKey(e => e.PagoId).HasName("PK__Pagos__F00B61386E843621");
 
-            entity.Property(e => e.MontoPagado).HasColumnType("decimal(18, 2)");
-            entity.Property(e => e.SaldoAcumulado).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.MontoPagado)
+                .HasMaxLength(250)
+                .IsUnicode(false);
+            entity.Property(e => e.SaldoAcumulado)
+                .HasMaxLength(250)
+                .IsUnicode(false);
+            entity.Property(e => e.Estado)
+                .HasMaxLength(50)
+                .IsUnicode(false);
 
             entity.HasOne(d => d.Prestamo).WithMany(p => p.Pagos)
                 .HasForeignKey(d => d.PrestamoId)
@@ -105,13 +114,12 @@ public partial class FinancieraDbContext : DbContext
             entity.HasKey(e => e.PrestamoId).HasName("PK__Prestamo__AA58A0A0D8263DE1");
 
             entity.Property(e => e.Estado).HasMaxLength(20);
-            entity.Property(e => e.MontoAprobado).HasColumnType("decimal(18, 2)");
-            entity.Property(e => e.TasaInteres).HasColumnType("decimal(5, 2)");
-
-            entity.HasOne(d => d.Cliente).WithMany(p => p.Prestamos)
-                .HasForeignKey(d => d.ClienteId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Prestamos__Clien__5165187F");
+            entity.Property(e => e.MontoAprobado)
+                .HasMaxLength(250)
+                .IsUnicode(false);
+            entity.Property(e => e.TasaInteres)
+                .HasMaxLength(250)
+                .IsUnicode(false);
 
             entity.HasOne(d => d.Solicitud).WithMany(p => p.Prestamos)
                 .HasForeignKey(d => d.SolicitudId)
@@ -119,7 +127,7 @@ public partial class FinancieraDbContext : DbContext
                 .HasConstraintName("FK__Prestamos__Solic__5070F446");
         });
 
-        modelBuilder.Entity<Solicitude>(entity =>
+        modelBuilder.Entity<Solicitud>(entity =>
         {
             entity.HasKey(e => e.SolicitudId).HasName("PK__Solicitu__85E95DC72E4B6F25");
 
