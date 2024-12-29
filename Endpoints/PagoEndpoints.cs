@@ -96,6 +96,22 @@ namespace FinancieraAPI.Endpoints
                     Summary = "ELIMINAR UN PAGO",
                     Description = "ELIMINAR UN PAGO DADO SU ID",
                 }).RequireAuthorization();
+
+            // GET - OBTENER PAGOS FUTUROS
+            group
+                .MapGet(
+                    "/futuros/{prestamoId}",
+                    async (int prestamoId, IPagoServices pagoServices) =>
+                    {
+                        var pagosFuturos = await pagoServices.GetPagosFuturos(prestamoId);
+                        return Results.Ok(pagosFuturos);
+                    }
+                )
+                .WithOpenApi(o => new OpenApiOperation(o)
+                {
+                    Summary = "OBTENER PAGOS FUTUROS",
+                    Description = "MUESTRA UNA LISTA DE PAGOS FUTUROS PARA UN PRÉSTAMO",
+                }).RequireAuthorization();
         }
     }
 }

@@ -48,6 +48,60 @@ namespace FinancieraAPI.Services
             return pagosList;
         }
 
+        public async Task<List<PagoFuturoResponse>> GetPagosFuturos(int prestamoId)
+        {
+            try
+            {
+                // Obtener el préstamo
+                var prestamo = await _context.Prestamos
+                    .Include(p => p.Pagos)
+                    .FirstOrDefaultAsync(p => p.PrestamoId == prestamoId);
+
+                if (prestamo == null)
+                {
+                    throw new Exception("Préstamo no encontrado.");
+                }
+
+                // Calcular los pagos futuros
+                var pagosFuturos = new List<PagoFuturoResponse>();
+                var montoTotal = decimal.Parse(prestamo.MontoAprobado);
+                var meses = (prestamo.FechaVencimiento.Year - prestamo.FechaInicio.Year) * 12 + prestamo.FechaVencimiento.Month - prestamo.FechaInicio.Month;
+                var montoMensual = montoTotal / meses;
+                var saldoAcumulado = montoTotal;
+
+                for (int i = 1; i <= meses; i++)
+                {
+                    var fechaPago = prestamo.FechaInicio.AddMonths(i);
+                    saldoAcumulado -= montoMensual;
+
+                    // Ajustar el último pago para cubrir el saldo restante
+                    if (i == meses)
+                    {
+                        montoMensual += saldoAcumulado;
+                        saldoAcumulado = 0;
+                    }
+
+                    pagosFuturos.Add(new PagoFuturoResponse
+                    {
+                        PagoId = i,
+                        PrestamoId = prestamo.PrestamoId,
+                        FechaPago = fechaPago,
+                        MontoAPagar = montoMensual.ToString("F2"),
+                        SaldoAcumulado = saldoAcumulado.ToString("F2"),
+                        Estado = "Pendiente"
+                    });
+                }
+
+                return pagosFuturos;
+            }
+            catch (Exception ex)
+            {
+                // Registrar el error
+                Console.WriteLine($"Error en GetPagosFuturos: {ex.Message}");
+                throw; // Relanzar la excepción para que el frontend la maneje
+            }
+        }
+
         public async Task<int> PostPago(PagoRequest pago)
         {
             var pagoRequest = _IMapper.Map<PagoRequest, Pago>(pago);
