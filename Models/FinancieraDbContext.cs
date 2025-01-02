@@ -93,6 +93,9 @@ public partial class FinancieraDbContext : DbContext
         {
             entity.HasKey(e => e.PagoId).HasName("PK__Pagos__F00B61386E843621");
 
+            entity.Property(e => e.MontoAPagar)
+                .HasMaxLength(250)
+                .IsUnicode(false);
             entity.Property(e => e.MontoPagado)
                 .HasMaxLength(250)
                 .IsUnicode(false);

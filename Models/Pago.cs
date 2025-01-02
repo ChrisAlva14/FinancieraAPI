@@ -11,11 +11,13 @@ public partial class Pago
 
     public DateOnly FechaPago { get; set; }
 
-    public string? MontoPagado { get; set; }
+    public string MontoAPagar { get; set; }
 
-    public string? SaldoAcumulado { get; set; }
+    public string MontoPagado { get; set; }
 
-    public string? Estado { get; set; }
+    public string SaldoAcumulado { get; set; }
+
+    public string Estado { get; set; }
 
     public virtual Prestamo Prestamo { get; set; } = null!;
 }

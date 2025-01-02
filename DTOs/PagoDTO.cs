@@ -8,11 +8,13 @@
 
         public DateOnly FechaPago { get; set; }
 
-        public string? MontoPagado { get; set; }
+        public string MontoAPagar { get; set; }
 
-        public string? SaldoAcumulado { get; set; }
+        public string MontoPagado { get; set; }
 
-        public string? Estado { get; set; }
+        public string SaldoAcumulado { get; set; }
+
+        public string Estado { get; set; }
     }
 
     public class PagoRequest
@@ -23,11 +25,13 @@
 
         public DateOnly FechaPago { get; set; }
 
-        public string? MontoPagado { get; set; }
+        public string MontoAPagar { get; set; }
 
-        public string? SaldoAcumulado { get; set; }
+        public string MontoPagado { get; set; }
 
-        public string? Estado { get; set; }
+        public string SaldoAcumulado { get; set; }
+
+        public string Estado { get; set; }
     }
 
     public class PagoFuturoResponse
