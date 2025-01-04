@@ -58,12 +58,12 @@ namespace FinancieraAPI.Services
             if (prestamo == null)
                 throw new KeyNotFoundException("Préstamo no encontrado.");
 
-            var montoTotal = decimal.Parse(prestamo.MontoAprobado);
+            var montoTotal = prestamo.MontoAprobado;
             var meses = (prestamo.FechaVencimiento.Year - prestamo.FechaInicio.Year) * 12 +
                         prestamo.FechaVencimiento.Month - prestamo.FechaInicio.Month;
 
             var montoMensual = montoTotal / meses;
-            var montoPagadoTotal = prestamo.Pagos.Sum(p => decimal.Parse(p.MontoPagado));
+            var montoPagadoTotal = prestamo.Pagos.Sum(p => p.MontoPagado);
             var saldoAcumulado = montoTotal - montoPagadoTotal;
 
             var pagosFuturos = new List<PagoFuturoResponse>();
@@ -84,8 +84,8 @@ namespace FinancieraAPI.Services
                     PagoId = i,
                     PrestamoId = prestamo.PrestamoId,
                     FechaPago = fechaPago,
-                    MontoAPagar = montoAPagar.ToString("F2"),
-                    SaldoAcumulado = saldoAcumulado.ToString("F2"),
+                    MontoAPagar = montoAPagar,
+                    SaldoAcumulado = saldoAcumulado,
                     Estado = "Pendiente"
                 });
 
@@ -98,10 +98,30 @@ namespace FinancieraAPI.Services
 
         public async Task<int> PostPago(PagoRequest pago)
         {
+
+            // Mapear el PagoRequest a la entidad Pago
             var pagoEntity = _IMapper.Map<PagoRequest, Pago>(pago);
 
-            await _context.Pagos.AddAsync(pagoEntity);
+            // Calcular el saldo acumulado
+            var prestamo = await _context.Prestamos
+                .Include(p => p.Pagos)
+                .FirstOrDefaultAsync(p => p.PrestamoId == pago.PrestamoId);
 
+            if (prestamo == null)
+            {
+                throw new KeyNotFoundException("Préstamo no encontrado.");
+            }
+
+            var montoTotal = prestamo.MontoAprobado;
+            var montoPagadoTotal = prestamo.Pagos.Sum(p => p.MontoPagado);
+            var saldoAcumulado = montoTotal - montoPagadoTotal;
+
+            // Ajustar el saldo acumulado
+            saldoAcumulado -= pago.MontoPagado;
+            pagoEntity.SaldoAcumulado = saldoAcumulado;
+
+            // Guardar el pago
+            await _context.Pagos.AddAsync(pagoEntity);
             await _context.SaveChangesAsync();
 
             return pagoEntity.PagoId;

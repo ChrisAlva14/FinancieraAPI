@@ -11,11 +11,11 @@ public partial class Pago
 
     public DateOnly FechaPago { get; set; }
 
-    public string MontoAPagar { get; set; }
+    public decimal MontoAPagar { get; set; }
 
-    public string MontoPagado { get; set; }
+    public decimal MontoPagado { get; set; }
 
-    public string SaldoAcumulado { get; set; }
+    public decimal SaldoAcumulado { get; set; }
 
     public string Estado { get; set; }
 
