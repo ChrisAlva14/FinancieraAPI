@@ -4,6 +4,8 @@ namespace FinancieraAPI.Services
 {
     public interface IPagoServices
     {
+        Task<List<PagoFuturoResponse>> GetPagosFuturos(int prestamoId);
+
         Task<int> PostPago(PagoRequest pago);
 
         Task<List<PagoResponse>> GetPagos();

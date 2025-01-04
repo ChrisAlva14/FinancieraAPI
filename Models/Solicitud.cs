@@ -14,13 +14,13 @@ public partial class Solicitud
 
     public string Estado { get; set; } = null!;
 
-    public DateOnly? FechaAnalisis { get; set; }
+    public DateOnly FechaAnalisis { get; set; }
 
-    public int? UserId { get; set; }
+    public int UserId { get; set; }
 
     public virtual Cliente Cliente { get; set; } = null!;
 
     public virtual ICollection<Prestamo> Prestamos { get; set; } = new List<Prestamo>();
 
-    public virtual Usuario? User { get; set; }
+    public virtual Usuario User { get; set; }
 }
