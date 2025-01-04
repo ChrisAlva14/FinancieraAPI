@@ -9,9 +9,9 @@ public partial class Prestamo
 
     public int SolicitudId { get; set; }
 
-    public string? MontoAprobado { get; set; }
+    public decimal MontoAprobado { get; set; }
 
-    public string? TasaInteres { get; set; }
+    public decimal TasaInteres { get; set; }
 
     public int Plazo { get; set; }
 
@@ -19,7 +19,7 @@ public partial class Prestamo
 
     public DateOnly FechaVencimiento { get; set; }
 
-    public string? Estado { get; set; }
+    public string Estado { get; set; }
 
     public virtual ICollection<Pago> Pagos { get; set; } = new List<Pago>();
 

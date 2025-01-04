@@ -93,12 +93,12 @@ public partial class FinancieraDbContext : DbContext
         {
             entity.HasKey(e => e.PagoId).HasName("PK__Pagos__F00B61386E843621");
 
+            entity.Property(e => e.MontoAPagar)
+                .HasColumnType("decimal(18, 2)");
             entity.Property(e => e.MontoPagado)
-                .HasMaxLength(250)
-                .IsUnicode(false);
+                .HasColumnType("decimal(18, 2)");
             entity.Property(e => e.SaldoAcumulado)
-                .HasMaxLength(250)
-                .IsUnicode(false);
+                .HasColumnType("decimal(18, 2)");
             entity.Property(e => e.Estado)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -114,12 +114,8 @@ public partial class FinancieraDbContext : DbContext
             entity.HasKey(e => e.PrestamoId).HasName("PK__Prestamo__AA58A0A0D8263DE1");
 
             entity.Property(e => e.Estado).HasMaxLength(20);
-            entity.Property(e => e.MontoAprobado)
-                .HasMaxLength(250)
-                .IsUnicode(false);
-            entity.Property(e => e.TasaInteres)
-                .HasMaxLength(250)
-                .IsUnicode(false);
+            entity.Property(e => e.MontoAprobado).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.TasaInteres).HasColumnType("decimal(18, 2)");
 
             entity.HasOne(d => d.Solicitud).WithMany(p => p.Prestamos)
                 .HasForeignKey(d => d.SolicitudId)
