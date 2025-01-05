@@ -118,6 +118,24 @@ namespace FinancieraAPI.Endpoints
                     Description = "MUESTRA UNA LISTA DE PAGOS FUTUROS PARA UN PRÉSTAMO",
                 })
                 .RequireAuthorization();
+
+
+            // GET - OBTENER PAGOS VENCIDOS
+            group
+                .MapGet(
+                    "/vencidos",
+                    async (IPagoServices pagoServices) =>
+                    {
+                        var pagosVencidos = await pagoServices.GetPagosVencidos();
+                        return Results.Ok(pagosVencidos);
+                    }
+                )
+                .WithOpenApi(o => new OpenApiOperation(o)
+                {
+                    Summary = "OBTENER PAGOS VENCIDOS",
+                    Description = "MUESTRA UNA LISTA DE PAGOS VENCIDOS (PAGOS CON FECHA DE PAGO PASADA Y ESTADO 'PENDIENTE')",
+                })
+                .RequireAuthorization();
         }
     }
 }

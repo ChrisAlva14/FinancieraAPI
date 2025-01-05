@@ -6,6 +6,8 @@ namespace FinancieraAPI.Services
     {
         Task<List<PagoFuturoResponse>> GetPagosFuturos(int prestamoId);
 
+        Task<List<PagoResponse>> GetPagosVencidos();
+
         Task<int> PostPago(PagoRequest pago);
 
         Task<List<PagoResponse>> GetPagos();

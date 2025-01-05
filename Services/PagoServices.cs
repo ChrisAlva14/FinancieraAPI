@@ -109,6 +109,23 @@ namespace FinancieraAPI.Services
             return pagosFuturos;
         }
 
+        // Implementación del método para obtener pagos vencidos
+        public async Task<List<PagoResponse>> GetPagosVencidos()
+        {
+            // Obtener la fecha actual
+            var fechaActual = DateOnly.FromDateTime(DateTime.Today);
+
+            // Filtrar pagos vencidos (fecha de pago menor a la fecha actual y estado "Pendiente")
+            var pagosVencidos = await _context.Pagos
+                .Where(p => p.FechaPago < fechaActual && p.Estado == "Pendiente")
+                .ToListAsync();
+
+            // Mapear a PagoResponse
+            var pagosVencidosResponse = _IMapper.Map<List<Pago>, List<PagoResponse>>(pagosVencidos);
+
+            return pagosVencidosResponse;
+        }
+
         public async Task<int> PostPago(PagoRequest pago)
         {
             var pagoEntity = _IMapper.Map<PagoRequest, Pago>(pago);
