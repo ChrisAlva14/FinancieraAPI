@@ -24,7 +24,8 @@ namespace FinancieraAPI.Endpoints
                 {
                     Summary = "OBTENER EMPLEOS",
                     Description = "MUESTRA UNA LISTA DE TODOS LOS EMPLEOS",
-                }).RequireAuthorization();
+                })
+                .RequireAuthorization();
 
             // GET - OBTENER EMPLEO POR ID
             group
@@ -40,7 +41,8 @@ namespace FinancieraAPI.Endpoints
                 {
                     Summary = "OBTENER UN EMPLEO POR ID",
                     Description = "OBTIENE UN EMPLEO DADO SU ID",
-                }).RequireAuthorization();
+                })
+                .RequireAuthorization();
 
             // POST - CREAR UN NUEVO EMPLEO
             group
@@ -56,7 +58,8 @@ namespace FinancieraAPI.Endpoints
                 {
                     Summary = "CREAR NUEVO EMPLEO",
                     Description = "CREA UN NUEVO EMPLEO CON LOS DATOS PROPORCIONADOS",
-                }).RequireAuthorization();
+                })
+                .RequireAuthorization();
 
             // PUT - MODIFICAR A UN EMPLEO
             group
@@ -76,7 +79,8 @@ namespace FinancieraAPI.Endpoints
                 {
                     Summary = "MODIFICAR UN EMPLEO",
                     Description = "ACTUALIZA UN EMPLEO DADO SU ID",
-                }).RequireAuthorization();
+                })
+                .RequireAuthorization();
 
             // DELETE - ELIMINAR UN EMPLEO
             group
@@ -95,7 +99,8 @@ namespace FinancieraAPI.Endpoints
                 {
                     Summary = "ELIMINAR UN EMPLEO",
                     Description = "ELIMINAR UN EMPLEO DADO SU ID",
-                }).RequireAuthorization();
+                })
+                .RequireAuthorization();
         }
     }
 }

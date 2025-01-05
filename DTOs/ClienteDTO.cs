@@ -22,6 +22,7 @@
 
         public string Estado { get; set; } = null!;
     }
+
     public class ClienteRequest
     {
         public int ClienteId { get; set; }

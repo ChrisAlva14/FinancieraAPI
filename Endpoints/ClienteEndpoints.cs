@@ -24,7 +24,8 @@ namespace FinancieraAPI.Endpoints
                 {
                     Summary = "OBTENER CLIENTES",
                     Description = "MUESTRA UNA LISTA DE TODOS LOS CLIENTES",
-                }).RequireAuthorization();
+                })
+                .RequireAuthorization();
 
             // GET - OBTENER CLIENTE POR ID
             group
@@ -40,7 +41,8 @@ namespace FinancieraAPI.Endpoints
                 {
                     Summary = "OBTENER UN CLIENTE POR ID",
                     Description = "OBTIENE UN CLIENTE DADO SU ID",
-                }).RequireAuthorization();
+                })
+                .RequireAuthorization();
 
             // POST - CREAR UN NUEVO CLIENTE
             group
@@ -56,7 +58,8 @@ namespace FinancieraAPI.Endpoints
                 {
                     Summary = "CREAR NUEVO CLIENTE",
                     Description = "CREA UN NUEVO CLIENTE CON LOS DATOS PROPORCIONADOS",
-                }).RequireAuthorization();
+                })
+                .RequireAuthorization();
 
             // PUT - MODIFICAR A UN CLIENTE
             group
@@ -76,7 +79,8 @@ namespace FinancieraAPI.Endpoints
                 {
                     Summary = "MODIFICAR UN CLIENTE",
                     Description = "ACTUALIZA UN CLIENTE DADO SU ID",
-                }).RequireAuthorization();
+                })
+                .RequireAuthorization();
 
             // DELETE - ELIMINAR UN CLIENTE
             group
@@ -95,7 +99,8 @@ namespace FinancieraAPI.Endpoints
                 {
                     Summary = "ELIMINAR UN CLIENTE",
                     Description = "ELIMINAR UN CLIENTE DADO SU ID",
-                }).RequireAuthorization();
+                })
+                .RequireAuthorization();
         }
     }
 }

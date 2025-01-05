@@ -24,7 +24,8 @@ namespace FinancieraAPI.Endpoints
                 {
                     Summary = "OBTENER PAGOS",
                     Description = "MUESTRA UNA LISTA DE TODOS LOS PAGOS",
-                }).RequireAuthorization();
+                })
+                .RequireAuthorization();
 
             // GET - OBTENER PAGO POR ID
             group
@@ -40,7 +41,8 @@ namespace FinancieraAPI.Endpoints
                 {
                     Summary = "OBTENER UN PAGO POR ID",
                     Description = "OBTIENE UN PAGO DADO SU ID",
-                }).RequireAuthorization();
+                })
+                .RequireAuthorization();
 
             // POST - CREAR UN NUEVO PAGO
             group
@@ -56,7 +58,8 @@ namespace FinancieraAPI.Endpoints
                 {
                     Summary = "CREAR NUEVO PAGO",
                     Description = "CREA UN NUEVO PAGO CON LOS DATOS PROPORCIONADOS",
-                }).RequireAuthorization();
+                })
+                .RequireAuthorization();
 
             // PUT - MODIFICAR A UN PAGO
             group
@@ -76,7 +79,8 @@ namespace FinancieraAPI.Endpoints
                 {
                     Summary = "MODIFICAR UN PAGO",
                     Description = "ACTUALIZA UN PAGO DADO SU ID",
-                }).RequireAuthorization();
+                })
+                .RequireAuthorization();
 
             // DELETE - ELIMINAR UN PAGO
             group
@@ -95,7 +99,8 @@ namespace FinancieraAPI.Endpoints
                 {
                     Summary = "ELIMINAR UN PAGO",
                     Description = "ELIMINAR UN PAGO DADO SU ID",
-                }).RequireAuthorization();
+                })
+                .RequireAuthorization();
 
             // GET - OBTENER PAGOS FUTUROS
             group
@@ -111,7 +116,8 @@ namespace FinancieraAPI.Endpoints
                 {
                     Summary = "OBTENER PAGOS FUTUROS",
                     Description = "MUESTRA UNA LISTA DE PAGOS FUTUROS PARA UN PRÉSTAMO",
-                }).RequireAuthorization();
+                })
+                .RequireAuthorization();
         }
     }
 }
