@@ -50,8 +50,8 @@ namespace FinancieraAPI.Services
 
         public async Task<List<PagoFuturoResponse>> GetPagosFuturos(int prestamoId)
         {
-            var prestamo = await _context.Prestamos
-                .Include(p => p.Pagos)
+            var prestamo = await _context
+                .Prestamos.Include(p => p.Pagos)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(p => p.PrestamoId == prestamoId);
 
@@ -61,8 +61,10 @@ namespace FinancieraAPI.Services
             // Monto total del préstamo con intereses incluidos
             var montoTotal = prestamo.MontoAprobado;
             var tasaInteres = prestamo.TasaInteres;
-            var meses = (prestamo.FechaVencimiento.Year - prestamo.FechaInicio.Year) * 12 +
-                        prestamo.FechaVencimiento.Month - prestamo.FechaInicio.Month;
+            var meses =
+                (prestamo.FechaVencimiento.Year - prestamo.FechaInicio.Year) * 12
+                + prestamo.FechaVencimiento.Month
+                - prestamo.FechaInicio.Month;
 
             // Cálculo del monto total a pagar con intereses
             var tasaInteresMensual = (tasaInteres / 12) / 100;
@@ -85,20 +87,23 @@ namespace FinancieraAPI.Services
                 // Ajustar el monto a pagar según el saldo restante
                 var montoAPagar = Math.Min(saldoRestante, montoMensual);
 
-                pagosFuturos.Add(new PagoFuturoResponse
-                {
-                    PagoId = i,
-                    PrestamoId = prestamo.PrestamoId,
-                    FechaPago = fechaPago,
-                    MontoAPagar = Math.Round(montoAPagar, 2),
-                    SaldoAcumulado = Math.Round(saldoRestante, 2),
-                    Estado = "Pendiente"
-                });
+                pagosFuturos.Add(
+                    new PagoFuturoResponse
+                    {
+                        PagoId = i,
+                        PrestamoId = prestamo.PrestamoId,
+                        FechaPago = fechaPago,
+                        MontoAPagar = Math.Round(montoAPagar, 2),
+                        SaldoAcumulado = Math.Round(saldoRestante, 2),
+                        Estado = "Pendiente",
+                    }
+                );
 
                 saldoRestante -= montoAPagar;
 
                 // Si el saldo restante es 0, detenemos la generación de pagos
-                if (saldoRestante <= 0) break;
+                if (saldoRestante <= 0)
+                    break;
             }
 
             return pagosFuturos;
@@ -108,8 +113,8 @@ namespace FinancieraAPI.Services
         {
             var pagoEntity = _IMapper.Map<PagoRequest, Pago>(pago);
 
-            var prestamo = await _context.Prestamos
-                .Include(p => p.Pagos)
+            var prestamo = await _context
+                .Prestamos.Include(p => p.Pagos)
                 .FirstOrDefaultAsync(p => p.PrestamoId == pago.PrestamoId);
 
             if (prestamo == null)
@@ -119,8 +124,10 @@ namespace FinancieraAPI.Services
 
             var montoTotal = prestamo.MontoAprobado;
             var tasaInteres = prestamo.TasaInteres;
-            var meses = (prestamo.FechaVencimiento.Year - prestamo.FechaInicio.Year) * 12 +
-                        prestamo.FechaVencimiento.Month - prestamo.FechaInicio.Month;
+            var meses =
+                (prestamo.FechaVencimiento.Year - prestamo.FechaInicio.Year) * 12
+                + prestamo.FechaVencimiento.Month
+                - prestamo.FechaInicio.Month;
 
             var tasaInteresMensual = (tasaInteres / 12) / 100;
             var factor = (decimal)Math.Pow(1 + (double)tasaInteresMensual, meses);
@@ -137,7 +144,6 @@ namespace FinancieraAPI.Services
 
             return pagoEntity.PagoId;
         }
-
 
         public async Task<int> PutPago(int pagoId, PagoRequest pago)
         {

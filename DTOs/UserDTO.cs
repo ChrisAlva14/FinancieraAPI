@@ -10,6 +10,7 @@
 
         public string UserRole { get; set; } = null!;
     }
+
     public class UserRequest
     {
         public string Username { get; set; } = null!;
@@ -17,7 +18,6 @@
         public string UserPassword { get; set; } = null!;
 
         public string UserRole { get; set; } = null!;
-
     }
 
     public class LoginResponse

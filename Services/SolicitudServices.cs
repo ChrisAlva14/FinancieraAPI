@@ -43,8 +43,9 @@ namespace FinancieraAPI.Services
         {
             var solicitudes = await _context.Solicitudes.ToListAsync();
 
-            var solicitudesList = _IMapper.Map<List<Solicitud>,
-                List<SolicitudResponse>>(solicitudes);
+            var solicitudesList = _IMapper.Map<List<Solicitud>, List<SolicitudResponse>>(
+                solicitudes
+            );
 
             return solicitudesList;
         }
