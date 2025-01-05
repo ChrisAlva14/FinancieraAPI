@@ -24,7 +24,8 @@ namespace FinancieraAPI.Endpoints
                 {
                     Summary = "OBTENER PRESTAMOS",
                     Description = "MUESTRA UNA LISTA DE TODOS LOS PRESTAMOS",
-                }).RequireAuthorization();
+                })
+                .RequireAuthorization();
 
             // GET - OBTENER PRESTAMO POR ID
             group
@@ -40,7 +41,8 @@ namespace FinancieraAPI.Endpoints
                 {
                     Summary = "OBTENER UN PRESTAMO POR ID",
                     Description = "OBTIENE UN PRESTAMO DADO SU ID",
-                }).RequireAuthorization();
+                })
+                .RequireAuthorization();
 
             // POST - CREAR UN NUEVO PRESTAMO
             group
@@ -56,7 +58,8 @@ namespace FinancieraAPI.Endpoints
                 {
                     Summary = "CREAR NUEVO PRESTAMO",
                     Description = "CREA UN NUEVO PRESTAMO CON LOS DATOS PROPORCIONADOS",
-                }).RequireAuthorization();
+                })
+                .RequireAuthorization();
 
             // PUT - MODIFICAR A UN PRESTAMO
             group
@@ -76,7 +79,8 @@ namespace FinancieraAPI.Endpoints
                 {
                     Summary = "MODIFICAR UN PRESTAMO",
                     Description = "ACTUALIZA UN PRESTAMO DADO SU ID",
-                }).RequireAuthorization();
+                })
+                .RequireAuthorization();
 
             // DELETE - ELIMINAR UN PRESTAMO
             group
@@ -95,7 +99,8 @@ namespace FinancieraAPI.Endpoints
                 {
                     Summary = "ELIMINAR UN PRESTAMO",
                     Description = "ELIMINAR UN PRESTAMO DADO SU ID",
-                }).RequireAuthorization();
+                })
+                .RequireAuthorization();
         }
     }
 }

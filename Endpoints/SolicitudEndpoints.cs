@@ -24,7 +24,8 @@ namespace FinancieraAPI.Endpoints
                 {
                     Summary = "OBTENER SOLICITUDES",
                     Description = "MUESTRA UNA LISTA DE TODOS LAS SOLICITUDES",
-                }).RequireAuthorization();
+                })
+                .RequireAuthorization();
 
             // GET - OBTENER SOLICITUD POR ID
             group
@@ -40,7 +41,8 @@ namespace FinancieraAPI.Endpoints
                 {
                     Summary = "OBTENER SOLICITUD POR ID",
                     Description = "OBTIENE UNA SOLICITUD DADO SU ID",
-                }).RequireAuthorization();
+                })
+                .RequireAuthorization();
 
             // POST - CREAR SOLICITUD
             group
@@ -56,13 +58,18 @@ namespace FinancieraAPI.Endpoints
                 {
                     Summary = "CREAR SOLICITUD",
                     Description = "CREA UNA SOLICITUD CON LOS DATOS PROPORCIONADOS",
-                }).RequireAuthorization();
+                })
+                .RequireAuthorization();
 
             // PUT - MODIFICAR SOLICITUD
             group
                 .MapPut(
                     "/{id}",
-                    async (int id, SolicitudRequest solicitud, ISolicitudServices solicitudServices) =>
+                    async (
+                        int id,
+                        SolicitudRequest solicitud,
+                        ISolicitudServices solicitudServices
+                    ) =>
                     {
                         var isUpdated = await solicitudServices.PutSolicitud(id, solicitud);
 
@@ -76,25 +83,28 @@ namespace FinancieraAPI.Endpoints
                 {
                     Summary = "MODIFICAR SOLICITUD",
                     Description = "ACTUALIZA UNA SOLICITUD DADO SU ID",
-                }).RequireAuthorization();
+                })
+                .RequireAuthorization();
 
             // DELETE - ELIMINAR SOLICITUD
             group
-            .MapDelete(
-                "/{id}",
-                async (int id, ISolicitudServices solicitudServices) =>
+                .MapDelete(
+                    "/{id}",
+                    async (int id, ISolicitudServices solicitudServices) =>
+                    {
+                        var isDeleted = await solicitudServices.DeleteSolicitud(id);
+                        if (isDeleted == -1)
+                            return Results.NotFound();
+                        else
+                            return Results.Ok();
+                    }
+                )
+                .WithOpenApi(o => new OpenApiOperation(o)
                 {
-                    var isDeleted = await solicitudServices.DeleteSolicitud(id);
-                    if (isDeleted == -1)
-                        return Results.NotFound();
-                    else
-                        return Results.Ok();
-                }
-            ).WithOpenApi(o => new OpenApiOperation(o)
-            {
-                Summary = "ELIMINAR SOLICITUD",
-                Description = "ELIMINAR UNA SOLICITUD DADO SU ID",
-            }).RequireAuthorization();
-}
+                    Summary = "ELIMINAR SOLICITUD",
+                    Description = "ELIMINAR UNA SOLICITUD DADO SU ID",
+                })
+                .RequireAuthorization();
+        }
     }
 }
