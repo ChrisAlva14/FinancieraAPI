@@ -58,21 +58,24 @@ namespace FinancieraAPI.Services
             if (prestamo == null)
                 throw new KeyNotFoundException("Préstamo no encontrado.");
 
-            // Monto total del préstamo con intereses incluidos
-            var montoTotal = prestamo.MontoAprobado;
-            var tasaInteres = prestamo.TasaInteres;
+            // Monto total del préstamo
+            var montoTotal = prestamo.MontoAprobado; 
+            var tasaInteresAnual = prestamo.TasaInteres; // 36% en tu ejemplo
             var meses =
                 (prestamo.FechaVencimiento.Year - prestamo.FechaInicio.Year) * 12
                 + prestamo.FechaVencimiento.Month
                 - prestamo.FechaInicio.Month;
 
-            // Cálculo del monto total a pagar con intereses
-            var tasaInteresMensual = (tasaInteres / 12) / 100;
-            var factor = (decimal)Math.Pow(1 + (double)tasaInteresMensual, -meses);
-            var montoMensual = montoTotal * (tasaInteresMensual / (1 - factor));
-            montoMensual = Math.Ceiling(montoMensual * 100) / 100; // Redondeo al centavo
+            // Tasa de interés mensual (36% anual -> 3% mensual)
+            var tasaInteresMensual = (tasaInteresAnual / 12) / 100; // 0.03
 
-            var montoTotalConIntereses = montoMensual * meses; // Total considerando intereses
+            // Calcular la cuota mensual usando la fórmula de amortización
+            var factor = (decimal)Math.Pow(1 + (double)tasaInteresMensual, meses);
+            var montoMensual = montoTotal * (tasaInteresMensual * factor) / (factor - 1);
+            montoMensual = Math.Round(montoMensual, 2); // Redondeo al centavo
+
+            // Monto total a pagar (cuota mensual * número de meses)
+            var montoTotalConIntereses = montoMensual * meses;
 
             // Monto ya pagado
             var montoPagadoTotal = prestamo.Pagos.Sum(p => p.MontoPagado);
@@ -86,6 +89,12 @@ namespace FinancieraAPI.Services
 
                 // Ajustar el monto a pagar según el saldo restante
                 var montoAPagar = Math.Min(saldoRestante, montoMensual);
+
+                // Si es el último pago, ajustar el monto para que el saldo restante sea 0
+                if (i == meses)
+                {
+                    montoAPagar = saldoRestante;
+                }
 
                 pagosFuturos.Add(
                     new PagoFuturoResponse
