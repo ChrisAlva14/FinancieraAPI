@@ -97,7 +97,11 @@ public partial class FinancieraDbContext : DbContext
                 .HasColumnType("decimal(18, 2)");
             entity.Property(e => e.MontoPagado)
                 .HasColumnType("decimal(18, 2)");
-            entity.Property(e => e.SaldoAcumulado)
+            entity.Property(e => e.InteresPagado)
+                .HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.CapitalPagado)
+                .HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.SaldoRestante)
                 .HasColumnType("decimal(18, 2)");
             entity.Property(e => e.Estado)
                 .HasMaxLength(50)

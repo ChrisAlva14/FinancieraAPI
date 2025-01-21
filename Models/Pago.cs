@@ -15,7 +15,11 @@ public partial class Pago
 
     public decimal MontoPagado { get; set; }
 
-    public decimal SaldoAcumulado { get; set; }
+    public decimal InteresPagado { get; set; }
+
+    public decimal CapitalPagado { get; set; }
+
+    public decimal SaldoRestante { get; set; }
 
     public string Estado { get; set; }
 
