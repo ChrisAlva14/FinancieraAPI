@@ -58,28 +58,21 @@ namespace FinancieraAPI.Services
             if (prestamo == null)
                 throw new KeyNotFoundException("Préstamo no encontrado.");
 
-            // Monto total del préstamo
-            var montoTotal = prestamo.MontoAprobado; 
-            var tasaInteresAnual = prestamo.TasaInteres; // 36% en tu ejemplo
+            var montoTotal = prestamo.MontoAprobado;
+            var tasaInteresAnual = prestamo.TasaInteres;
             var meses =
                 (prestamo.FechaVencimiento.Year - prestamo.FechaInicio.Year) * 12
                 + prestamo.FechaVencimiento.Month
                 - prestamo.FechaInicio.Month;
 
-            // Tasa de interés mensual (36% anual -> 3% mensual)
-            var tasaInteresMensual = (tasaInteresAnual / 12) / 100; // 0.03
+            var tasaInteresMensual = (tasaInteresAnual / 12) / 100; // Convertir a tasa mensual
 
             // Calcular la cuota mensual usando la fórmula de amortización
             var factor = (decimal)Math.Pow(1 + (double)tasaInteresMensual, meses);
-            var montoMensual = montoTotal * (tasaInteresMensual * factor) / (factor - 1);
-            montoMensual = Math.Round(montoMensual, 2); // Redondeo al centavo
+            var cuotaMensual = montoTotal * (tasaInteresMensual * factor) / (factor - 1);
+            cuotaMensual = Math.Round(cuotaMensual, 2); // Redondear a 2 decimales
 
-            // Monto total a pagar (cuota mensual * número de meses)
-            var montoTotalConIntereses = montoMensual * meses;
-
-            // Monto ya pagado
-            var montoPagadoTotal = prestamo.Pagos.Sum(p => p.MontoPagado);
-            var saldoRestante = montoTotalConIntereses - montoPagadoTotal;
+            var saldoRestante = montoTotal; // Inicializar el saldo restante con el monto total del préstamo
 
             var pagosFuturos = new List<PagoFuturoResponse>();
 
@@ -87,30 +80,37 @@ namespace FinancieraAPI.Services
             {
                 var fechaPago = prestamo.FechaInicio.AddMonths(i);
 
-                // Ajustar el monto a pagar según el saldo restante
-                var montoAPagar = Math.Min(saldoRestante, montoMensual);
+                // Calcular el interés del mes
+                decimal interesPagado = saldoRestante * tasaInteresMensual;
+                interesPagado = Math.Round(interesPagado, 2);
 
-                // Si es el último pago, ajustar el monto para que el saldo restante sea 0
-                if (i == meses)
-                {
-                    montoAPagar = saldoRestante;
-                }
+                // Calcular el capital del mes
+                decimal capitalPagado = cuotaMensual - interesPagado;
+                capitalPagado = Math.Round(capitalPagado, 2);
 
+                // Asegurarse de que el capital no sea mayor que el saldo restante
+                capitalPagado = Math.Min(capitalPagado, saldoRestante);
+
+                // Calcular el saldo restante después del pago
+                saldoRestante -= capitalPagado;
+                saldoRestante = Math.Round(saldoRestante, 2);
+
+                // Agregar el pago futuro a la lista
                 pagosFuturos.Add(
                     new PagoFuturoResponse
                     {
                         PagoId = i,
                         PrestamoId = prestamo.PrestamoId,
                         FechaPago = fechaPago,
-                        MontoAPagar = Math.Round(montoAPagar, 2),
-                        SaldoAcumulado = Math.Round(saldoRestante, 2),
+                        MontoAPagar = cuotaMensual,
+                        InteresPagado = interesPagado,
+                        CapitalPagado = capitalPagado,
+                        SaldoRestante = saldoRestante,
                         Estado = "Pendiente",
                     }
                 );
 
-                saldoRestante -= montoAPagar;
-
-                // Si el saldo restante es 0, detenemos la generación de pagos
+                // Si el saldo restante es 0, detener la generación de pagos
                 if (saldoRestante <= 0)
                     break;
             }
@@ -148,24 +148,15 @@ namespace FinancieraAPI.Services
                 throw new KeyNotFoundException("Préstamo no encontrado.");
             }
 
-            var montoTotal = prestamo.MontoAprobado;
-            var tasaInteres = prestamo.TasaInteres;
-            var meses =
-                (prestamo.FechaVencimiento.Year - prestamo.FechaInicio.Year) * 12
-                + prestamo.FechaVencimiento.Month
-                - prestamo.FechaInicio.Month;
+            // Asignar los valores proporcionados al pago
+            pagoEntity.InteresPagado = pago.InteresPagado;
+            pagoEntity.CapitalPagado = pago.CapitalPagado;
+            pagoEntity.SaldoRestante = pago.SaldoRestante;
 
-            var tasaInteresMensual = (tasaInteres / 12) / 100;
-            var factor = (decimal)Math.Pow(1 + (double)tasaInteresMensual, meses);
-            var montoTotalConInteres = montoTotal * factor;
+            // Agregar el pago a la lista de pagos del préstamo
+            prestamo.Pagos.Add(pagoEntity);
 
-            var montoPagadoTotal = prestamo.Pagos.Sum(p => p.MontoPagado);
-            var saldoAcumulado = montoTotalConInteres - montoPagadoTotal;
-
-            saldoAcumulado -= pago.MontoPagado;
-            pagoEntity.SaldoAcumulado = Math.Round(saldoAcumulado, 2);
-
-            await _context.Pagos.AddAsync(pagoEntity);
+            // Guardar los cambios en la base de datos
             await _context.SaveChangesAsync();
 
             return pagoEntity.PagoId;
@@ -185,7 +176,7 @@ namespace FinancieraAPI.Services
             entity.FechaPago = pago.FechaPago;
             entity.MontoAPagar = pago.MontoAPagar;
             entity.MontoPagado = pago.MontoPagado;
-            entity.SaldoAcumulado = pago.SaldoAcumulado;
+            entity.SaldoRestante = pago.SaldoRestante;
             entity.Estado = pago.Estado;
 
             _context.Pagos.Update(entity);
