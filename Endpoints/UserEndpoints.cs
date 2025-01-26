@@ -135,7 +135,7 @@ namespace FinancieraAPI.Endpoints
                                 {
                                     new Claim(ClaimTypes.Name, login.Username),
                                     new Claim(ClaimTypes.Role, login.UserRole),
-                                    new Claim(ClaimTypes.Role, login.Name),
+                                    new Claim(ClaimTypes.Name, login.Name),
                                 }
                             ),
                             Expires = DateTime.UtcNow.AddHours(1),
