@@ -135,6 +135,7 @@ namespace FinancieraAPI.Endpoints
                                 {
                                     new Claim(ClaimTypes.Name, login.Username),
                                     new Claim(ClaimTypes.Role, login.UserRole),
+                                    new Claim(ClaimTypes.Role, login.Name),
                                 }
                             ),
                             Expires = DateTime.UtcNow.AddHours(1),
@@ -155,6 +156,7 @@ namespace FinancieraAPI.Endpoints
                                 Token = jwt,
                                 Username = login.Username,
                                 Role = login.UserRole,
+                                Name = login.Name,
                             }
                         );
                     }
