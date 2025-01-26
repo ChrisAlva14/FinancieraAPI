@@ -82,6 +82,7 @@ namespace FinancieraAPI.Services
             entitiy.Username = user.Username;
             entitiy.UserPassword = user.UserPassword;
             entitiy.UserRole = user.UserRole;
+            entitiy.Name = user.Name;
 
             _context.Usuarios.Update(entitiy);
 
