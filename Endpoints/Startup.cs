@@ -1,7 +1,15 @@
-﻿namespace FinancieraAPI.Endpoints
+using FinancieraAPI.Services;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace FinancieraAPI.Endpoints
 {
     public static class Startup
     {
+        public static void ConfigureService(IServiceCollection services)
+        {
+            services.AddHostedService<PagoBackgroundService>();
+        }
+
         public static void UseEndpoints(this WebApplication app)
         {
             UserEndpoints.Add(app);
