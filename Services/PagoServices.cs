@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using FinancieraAPI.DTOs;
 using FinancieraAPI.Models;
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +33,8 @@ namespace FinancieraAPI.Services
         public async Task<PagoResponse> GetPago(int pagoId)
         {
             var pago = await _context.Pagos.FindAsync(pagoId);
+            if (pago is null || (pago.Estado == "Realizado" && pago.FechaPago > DateOnly.FromDateTime(DateTime.Today)))
+                return null;
 
             var pagoResponse = _IMapper.Map<PagoResponse>(pago);
 

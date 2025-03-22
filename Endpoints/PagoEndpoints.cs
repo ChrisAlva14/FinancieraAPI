@@ -1,4 +1,4 @@
-﻿using FinancieraAPI.DTOs;
+using FinancieraAPI.DTOs;
 using FinancieraAPI.Services;
 using Microsoft.OpenApi.Models;
 
@@ -34,7 +34,9 @@ namespace FinancieraAPI.Endpoints
                     async (int id, IPagoServices pagoServices) =>
                     {
                         var pago = await pagoServices.GetPago(id);
-                        return pago is not null ? Results.Ok(pago) : Results.NotFound();
+                        if (pago is null || (pago.Estado == "Realizado" && pago.FechaPago > DateOnly.FromDateTime(DateTime.Today)))
+                            return Results.NotFound();
+                        return Results.Ok(pago);
                     }
                 )
                 .WithOpenApi(o => new OpenApiOperation(o)
@@ -119,7 +121,6 @@ namespace FinancieraAPI.Endpoints
                 })
                 .RequireAuthorization();
 
-
             // GET - OBTENER PAGOS VENCIDOS
             group
                 .MapGet(
@@ -133,7 +134,8 @@ namespace FinancieraAPI.Endpoints
                 .WithOpenApi(o => new OpenApiOperation(o)
                 {
                     Summary = "OBTENER PAGOS VENCIDOS",
-                    Description = "MUESTRA UNA LISTA DE PAGOS VENCIDOS (PAGOS CON FECHA DE PAGO PASADA Y ESTADO 'PENDIENTE')",
+                    Description =
+                        "MUESTRA UNA LISTA DE PAGOS VENCIDOS (PAGOS CON FECHA DE PAGO PASADA Y ESTADO 'PENDIENTE')",
                 })
                 .RequireAuthorization();
         }
