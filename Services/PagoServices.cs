@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using FinancieraAPI.DTOs;
 using FinancieraAPI.Models;
 using Microsoft.EntityFrameworkCore;
@@ -125,8 +125,8 @@ namespace FinancieraAPI.Services
             var fechaActual = DateOnly.FromDateTime(DateTime.Today);
 
             // Filtrar pagos vencidos (fecha de pago menor a la fecha actual y estado "Pendiente")
-            var pagosVencidos = await _context.Pagos
-                .Where(p => p.FechaPago < fechaActual && p.Estado == "Pendiente")
+            var pagosVencidos = await _context
+                .Pagos.Where(p => p.FechaPago < fechaActual && p.Estado == "Pendiente")
                 .ToListAsync();
 
             // Mapear a PagoResponse
@@ -182,6 +182,52 @@ namespace FinancieraAPI.Services
             _context.Pagos.Update(entity);
 
             return await _context.SaveChangesAsync();
+        }
+
+        public async Task ProcesarPagosAutomaticosAsync()
+        {
+            var hoy = DateOnly.FromDateTime(DateTime.Today);
+
+            // Obtener todos los préstamos activos
+            var prestamosActivos = await _context.Prestamos
+                .Include(p => p.Pagos) // Incluir los pagos existentes
+                .Where(p => p.Estado == "Activo") // Filtrar préstamos activos
+                .ToListAsync();
+
+            foreach (var prestamo in prestamosActivos)
+            {
+                // Calcular los pagos futuros para el préstamo
+                var pagosFuturos = await GetPagosFuturos(prestamo.PrestamoId);
+
+                foreach (var pagoFuturo in pagosFuturos)
+                {
+                    // Verificar si el pago ya existe en la base de datos
+                    var pagoExistente = await _context.Pagos
+                        .FirstOrDefaultAsync(p => p.PrestamoId == prestamo.PrestamoId &&
+                                                  p.FechaPago == pagoFuturo.FechaPago);
+
+                    // Si el pago no existe y la fecha de pago ya pasó, guardarlo
+                    if (pagoExistente == null && pagoFuturo.FechaPago < hoy)
+                    {
+                        var pago = new Pago
+                        {
+                            PrestamoId = pagoFuturo.PrestamoId,
+                            FechaPago = pagoFuturo.FechaPago,
+                            MontoAPagar = pagoFuturo.MontoAPagar,
+                            MontoPagado = pagoFuturo.MontoAPagar,
+                            InteresPagado = pagoFuturo.InteresPagado,
+                            CapitalPagado = pagoFuturo.CapitalPagado,
+                            SaldoRestante = pagoFuturo.SaldoRestante,
+                            Estado = "Pendiente" // Estado inicial
+                        };
+
+                        _context.Pagos.Add(pago);
+                    }
+                }
+            }
+
+            // Guardar todos los cambios en la base de datos
+            await _context.SaveChangesAsync();
         }
     }
 }

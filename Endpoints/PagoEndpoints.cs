@@ -1,4 +1,4 @@
-﻿using FinancieraAPI.DTOs;
+using FinancieraAPI.DTOs;
 using FinancieraAPI.Services;
 using Microsoft.OpenApi.Models;
 
@@ -119,7 +119,6 @@ namespace FinancieraAPI.Endpoints
                 })
                 .RequireAuthorization();
 
-
             // GET - OBTENER PAGOS VENCIDOS
             group
                 .MapGet(
@@ -133,7 +132,25 @@ namespace FinancieraAPI.Endpoints
                 .WithOpenApi(o => new OpenApiOperation(o)
                 {
                     Summary = "OBTENER PAGOS VENCIDOS",
-                    Description = "MUESTRA UNA LISTA DE PAGOS VENCIDOS (PAGOS CON FECHA DE PAGO PASADA Y ESTADO 'PENDIENTE')",
+                    Description =
+                        "MUESTRA UNA LISTA DE PAGOS VENCIDOS (PAGOS CON FECHA DE PAGO PASADA Y ESTADO 'PENDIENTE')",
+                })
+                .RequireAuthorization();
+
+            // POST - PROCESAR PAGOS AUTOMÁTICOS
+            group
+                .MapPost(
+                    "/procesar-automaticos",
+                    async (IPagoServices pagoServices) =>
+                    {
+                        await pagoServices.ProcesarPagosAutomaticosAsync();
+                        return Results.Ok("Pagos automáticos procesados correctamente.");
+                    }
+                )
+                .WithOpenApi(o => new OpenApiOperation(o)
+                {
+                    Summary = "PROCESAR PAGOS AUTOMÁTICOS",
+                    Description = "EJECUTA EL PROCESO AUTOMÁTICO DE PAGOS PENDIENTES",
                 })
                 .RequireAuthorization();
         }

@@ -17,5 +17,8 @@ namespace FinancieraAPI.Services
         Task<int> PutPago(int PagoId, PagoRequest pago);
 
         Task<int> DeletePago(int pagoId);
+
+        Task ProcesarPagosAutomaticosAsync();
+
     }
 }
