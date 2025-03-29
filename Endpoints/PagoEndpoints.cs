@@ -34,9 +34,7 @@ namespace FinancieraAPI.Endpoints
                     async (int id, IPagoServices pagoServices) =>
                     {
                         var pago = await pagoServices.GetPago(id);
-                        if (pago is null || (pago.Estado == "Realizado" && pago.FechaPago > DateOnly.FromDateTime(DateTime.Today)))
-                            return Results.NotFound();
-                        return Results.Ok(pago);
+                        return pago is not null ? Results.Ok(pago) : Results.NotFound();
                     }
                 )
                 .WithOpenApi(o => new OpenApiOperation(o)
