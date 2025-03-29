@@ -85,7 +85,12 @@ builder.Services.AddScoped<IEmpleoServices, EmpleoServices>();
 builder.Services.AddScoped<IPrestamoServices, PrestamoServices>();
 builder.Services.AddScoped<IPagoServices, PagoServices>();
 
+builder.Services.AddScoped<PagoServices>();
+
+builder.Services.AddHostedService<PagoBackgroundService>();
+
 var app = builder.Build();
+
 
 
 
