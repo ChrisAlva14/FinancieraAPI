@@ -50,67 +50,75 @@ namespace FinancieraAPI.Services
 
         public async Task<List<PagoFuturoResponse>> GetPagosFuturos(int prestamoId)
         {
-            var prestamo = await _context
-                .Prestamos.Include(p => p.Pagos)
+            var prestamo = await _context.Prestamos
+                .Include(p => p.Pagos)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(p => p.PrestamoId == prestamoId);
 
             if (prestamo == null)
                 throw new KeyNotFoundException("Préstamo no encontrado.");
 
+            // Ordenar los pagos existentes por fecha
+            var pagosRealizados = prestamo.Pagos
+                .Where(p => p.Estado == "Realizado")
+                .OrderBy(p => p.FechaPago)
+                .ToList();
+
             var montoTotal = prestamo.MontoAprobado;
             var tasaInteresAnual = prestamo.TasaInteres;
-            var meses =
-                (prestamo.FechaVencimiento.Year - prestamo.FechaInicio.Year) * 12
-                + prestamo.FechaVencimiento.Month
-                - prestamo.FechaInicio.Month;
+            var meses = (prestamo.FechaVencimiento.Year - prestamo.FechaInicio.Year) * 12
+                        + prestamo.FechaVencimiento.Month - prestamo.FechaInicio.Month;
 
-            var tasaInteresMensual = (tasaInteresAnual / 12) / 100; // Convertir a tasa mensual
-
-            // Calcular la cuota mensual usando la fórmula de amortización
+            var tasaInteresMensual = (tasaInteresAnual / 12) / 100;
             var factor = (decimal)Math.Pow(1 + (double)tasaInteresMensual, meses);
             var cuotaMensual = montoTotal * (tasaInteresMensual * factor) / (factor - 1);
-            cuotaMensual = Math.Round(cuotaMensual, 2); // Redondear a 2 decimales
+            cuotaMensual = Math.Round(cuotaMensual, 2);
 
-            var saldoRestante = montoTotal; // Inicializar el saldo restante con el monto total del préstamo
-
+            var saldoRestante = montoTotal;
             var pagosFuturos = new List<PagoFuturoResponse>();
 
             for (int i = 1; i <= meses; i++)
             {
                 var fechaPago = prestamo.FechaInicio.AddMonths(i);
+                bool puedePagar = false;
+                string estado = "Pendiente";
 
-                // Calcular el interés del mes
                 decimal interesPagado = saldoRestante * tasaInteresMensual;
                 interesPagado = Math.Round(interesPagado, 2);
 
-                // Calcular el capital del mes
                 decimal capitalPagado = cuotaMensual - interesPagado;
                 capitalPagado = Math.Round(capitalPagado, 2);
 
-                // Asegurarse de que el capital no sea mayor que el saldo restante
                 capitalPagado = Math.Min(capitalPagado, saldoRestante);
-
-                // Calcular el saldo restante después del pago
                 saldoRestante -= capitalPagado;
                 saldoRestante = Math.Round(saldoRestante, 2);
 
-                // Agregar el pago futuro a la lista
-                pagosFuturos.Add(
-                    new PagoFuturoResponse
-                    {
-                        PagoId = i,
-                        PrestamoId = prestamo.PrestamoId,
-                        FechaPago = fechaPago,
-                        MontoAPagar = cuotaMensual,
-                        InteresPagado = interesPagado,
-                        CapitalPagado = capitalPagado,
-                        SaldoRestante = saldoRestante,
-                        Estado = "Pendiente",
-                    }
-                );
 
-                // Si el saldo restante es 0, detener la generación de pagos
+                // Verificar si el pago ya fue realizado
+                if (pagosRealizados.Any(p => p.PagoId == i))
+                {
+                    estado = "Realizado";
+                }
+                else if (fechaPago <= DateOnly.FromDateTime(DateTime.Today))
+                {
+                    // Pago vencido o para hoy
+                    puedePagar = true;
+                    estado = fechaPago == DateOnly.FromDateTime(DateTime.Today) ? "Hoy" : "Vencido";
+                }
+
+                pagosFuturos.Add(new PagoFuturoResponse
+                {
+                    PagoId = i,
+                    PrestamoId = prestamo.PrestamoId,
+                    FechaPago = fechaPago,
+                    MontoAPagar = cuotaMensual,
+                    InteresPagado = interesPagado,
+                    CapitalPagado = capitalPagado,
+                    SaldoRestante = saldoRestante,
+                    Estado = estado,
+                    PuedePagar = puedePagar
+                });
+
                 if (saldoRestante <= 0)
                     break;
             }
