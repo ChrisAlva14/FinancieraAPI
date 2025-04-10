@@ -61,5 +61,7 @@
         public string Estado { get; set; }
 
         public decimal MontoPagado { get; set; } // Campo temporal para el formulario
+
+        public bool PuedePagar { get; set; }
     }
 }
